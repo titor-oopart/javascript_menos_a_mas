@@ -1,0 +1,912 @@
+\chapter{La vida de un Componente}
+Ahora que sabemos como usar DOM componentes aprendamos a crear nuestros componentes\\
+Hay dos maneras para definir un componente ambos daran el mismo resultado pero usando diferentes sintaxis\\
+\begin{itemize}
+  \item Usando una funcion(Componentes creados de esta manera se refieren como function components)
+  \item Usando una class clase que es extendida de React.Component(comunmente referida como clase componente)
+\end{itemize}
+\section{Una funcion Custom Component}
+Aqui un ejemplo
+\begin{lstlisting}[language=html]
+  const MyComponent = function() {
+      return 'I am so custom'
+    };
+\end{lstlisting}
+Espera esta es solo una funcion pero retorna la UI que quieres 
+\begin{lstlisting}[language=html]
+  const MyComponent = function() {
+      return React.createElement('span', null, 'I am so custom');
+    };
+\end{lstlisting}
+Con el componente creado en el capitulo anterior podemos agregar el nuevo de la siguiente manera:
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script>
+      const MyComponent = function () {
+        return React.createElement("span", null, "I am so custom");
+      };
+      ReactDOM.render(MyComponent(), document.getElementById("app"));
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+\section{Custom Component version JSX}
+Se puede hacer el mismo ejemplo ahora usando babel y JSX
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      const MyComponent = function () {
+        return <span>I am so custom</span>;
+      };
+      ReactDOM.render(<MyComponent />, document.getElementById("app"));
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+\section{Un componente custom en una clase}
+La segunda manera para crear un componente es definirlo en una clase que es extendida de React.Component e implementa una funcion render()
+\\
+02.03.custom-class.html
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    // <script type="text/babel">
+    // Con JSX
+    // <script type="text/babel">
+    <script>
+      class MyComponent extends React.Component {
+        render() {
+          return React.createElement("span", null, "I am so custom");
+          // Con JSX
+          // return <span>I am so custom</span>;
+        }
+      }
+      ReactDOM.render(
+        React.createElement(MyComponent),
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+   
+\end{lstlisting}
+Aqui el ejemplo con clases en sintaxis JSX
+\\
+02.04.custom-class-jsx.html
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      class MyComponent extends React.Component {
+        render() {
+          return <span>I am so custom JSX</span>;
+        }
+      }
+      ReactDOM.render(<MyComponent />, document.getElementById("app"));
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+\section{Que sintaxis Usar?}
+Seguro esperas saber que opcion usar (JSX vs javascript puro, class component vs function component), JSX es el mas comun. amenos que no te guste sintaxis xml en tu codigo JavaScript, el camino de menos resistencia y de menor escritura serai escojer JSX\\
+Este libro usa JSX desde ahora, Por que despues hablaremos sobre la manera no-JSX?\\
+Bueno deberias asaber que hay otra manera y tambien que JSX no es magico pero tiene una sintaxis corta que transforma XML en plain llamadas JavaScript function como React.createElement() antes de enviarlo al codigo del navegador\\
+Que sobre class vs function components? Si estas agusto con OOP puedes y te gusta las clases ve por ese camino, Function components son un poco mas ligero en el CPU de la computadora y requiere menos escritura de codigo.\\
+tambien se siguiente mas nativo a JavaScript. Actualmente classes no existen en una version reciente del lenguaje JavaScript; \\
+Historicamente, tan rapido como React es concernado, los componentes de fucnioens no estan disponible para hacer todo lo que las clases hacen. Hasta la invencion de los hooks, que es la manera como tendras las dos maneras. Para el futuro uno puede solo especular, pero es como que React movera mas y mas components functions. Como sea es favorable aun que no nos guste que las class components van a ser deprecadas alguna tiempo pronto.\\
+Este libro te enseniara las dos manears y no decidira por vos, eso dependera de tu preferencia \\
+Aunqeu en la documentacion muestra mas ejemplo como class components te haras familiar con ambas opciones y podras entender todo el codigo presente y no ocnfundirte\\
+\section{Propiedades}
+Renderisando hard-coded UI en tu custom componetns es perfecto bien tiene sus usos . Pero los componentes puede tomar propiedades y rendereisar o comportarse differente, dependiendo de los valores de las propiedades. Piensa sobre el elemento <a> en HTML y como este actua diferente basado en el valor del atributo href\\
+La idea de propiedades en React es similar(y esta es la JSX sintaxis)\\
+En una clase component todas las propiedades estan disponible via this.props object, Veamos un ejemplo
+\begin{lstlisting}[language=html]
+class MyComponent extends React.Component {
+  render() {
+    return <span>My name is <em>{this.props.name}</em></span>;
+  }
+}
+\end{lstlisting}
+Pasando un valor de la propiedad del nombre cuando renderisamos el component se parece a esto
+\begin{lstlisting}[language=html]
+      ReactDOM.render(
+        <MyComponent name="Titor" />,
+        document.getElementById("app"),
+      );
+\end{lstlisting}
+\section{Propiedades en Function Components}
+En una funcion component, No hay esto (en JavaScript strict mode) o esto refiere al objeto global(en non-scrit, sloppy mode)en lugar de this.props, tu tendras un props object pasado a tu funcion como primer argumento
+\\
+\begin{lstlisting}[language=html]
+      const MyComponent = function (props) {
+        return (
+          <span>
+            I am <em>{props.name}</em>
+          </span>
+        );
+      };
+      ReactDOM.render(
+        MyComponent({ name: "Titor" }),
+        document.getElementById("app"),
+      );
+\end{lstlisting}
+Un patron comun es usar JavaScript destructuring assignment y asignar el valor de la propiedad a la variable local. En otras palabras como el ejemplo\\
+\begin{lstlisting}[language=html]
+// 02.07.props.destructuring.html
+      const MyComponent = function ({ name }) {
+        return (
+          <span>
+            I am <em>{name}</em>
+          </span>
+        );
+      };
+      ReactDOM.render(
+        <MyComponent nam="Titor" />,
+        document.getElementById("app"),
+      );
+\end{lstlisting}
+Aqui un ejemplo con multiples propiedades
+\begin{lstlisting}[language=html]
+// 02.08.props.destruct.multi.html
+      const MyComponent = function ({ name, lastname, job }) {
+        return (
+          <span>
+            I am{" "}
+            <em>
+              {name} {lastname}
+            </em>{" "}
+            the <em>{job}</em> and I love technology
+          </span>
+        );
+      };
+      ReactDOM.render(
+        <MyComponent name="Titor" lastname="Oopart" job="Software Engineer" />,
+        document.getElementById("app"),
+      );
+\end{lstlisting}
+\section{Default Properties}
+Tu componente podria offercer un numero de propiedades, pero algunas veces un poco de las propiedades podrian tener valores por default que funcionan bien para la mayoria de los casos. \\
+Puedes especificar propiedades por default usando ddefaultProps property para ambas funciones y class components
+\begin{lstlisting}[language=html]
+const MyComponent = function ({ name, lastname, job }) {
+        return (
+          <span>
+            I am{" "}
+            <em>
+              {name} {lastname}
+            </em>{" "}
+            the <em>{job}</em> I love technology
+          </span>
+        );
+      };
+      MyComponent.defaultProps = {
+        job: "Engineer",
+      };
+      ReactDOM.render(
+        <MyComponent name="Titor" lastname="Oopart" />,
+        document.getElementById("app"),
+      );
+\end{lstlisting}
+Class component
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>React Applicaction</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      class MyComponent extends React.Component {
+        render() {
+          return (
+            <span>
+              I am
+              <em>
+                {" "}
+                {this.props.name} {this.props.lastname}
+              </em>{" "}
+              the {this.props.job}
+            </span>
+          );
+        }
+      }
+      MyComponent.defaultProps = {
+        job: "Engineer",
+      };
+      ReactDOM.render(
+        <MyComponent name="Titor" lastname="Oopart" />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+Nota como el metodo render() reotrna el estado envolviendo el valore retornado en parentesis. Esto es por el mecanismo JavaScript insercion automatica de semi-colon(ASI). Un estado retorno seguido por una nueva linea en el mismo return; Cual es el mismo return undefined; lo cual es lo que no quieres.\\
+Envolver la expression retorno en parentesis termite mejor formato de codigo.
+\section{State}
+El ejemplo sera statico(o "stateless"). El objetivo fue solo darte una idea de construir bloques de compocicion para UI. Pero React se complica cuando viejos navegadores manipulan DOM y el mantenimiento se hace complicado es cuando el dato en tu applicacion cambia. React tiene el concepto de state, cual es cualquier dato que el componente quiere para usar el render por ellos mismos.\\
+Cuando el estado cambia React reconstruye la UI en el Dom sin que tengas que hacer nada. Despues construyes tu UI inicial en tu metodo render() o en la funcion rendering en caso de una funcion component todo lo que debes preocuparte es actaulzar la data. No necesitas preocuparte sobre cambios UI del todo. Despues de todo tu metodo/funcion render esta lista proveyendo el blueprint de como el deberia verse el componente\\
+Similar a como tus propiedades de acceso via this.props tu lees el estado via el objeto this.state Para actualizar el estado, Tu usas this.setState() Cuando this.setState() es llamado React llama el metodo render de tu componente y todos sus hijos y actualiza la UI\\
+La actualizacion de la UI despues de llamar this.setState() esta hecha usando un mecanismo que eficientemente maneja cambios. Actualizado this.state directamente puede tener un comportamiento inesperado y tu no deberias hacerlo. \\
+Como con this.props considera el this.state object read-only no solo por que es semanticamente una idea mala peor por que esto puede actuar en maneras tu no esperas. Similar no llames this.render() a ti mismo deja a React manejar los cambios, llama render() cuando y si es apropiado.
+\section{Textarea Component}
+Construyamos un nuevo componente textarea que cuenta el numero de caracteres escritos 
+Tu (o bien otro futuro consumidor de este asombroso componente reusable) puede usar el nuevo component como
+\\
+Crearemos una version "stateless" que no maneje los updates; Esto no es diferente a los ejemplos anteriores
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>React Application stateless</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      class TextAreaCounter extends React.Component {
+        render() {
+          const text = this.props.text;
+          return (
+            <div>
+              <textarea defaultValue={text} />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+      }
+      TextAreaCounter.defulatProps = {
+        text: "Count me as I type",
+      };
+
+      ReactDOM.render(
+        <TextAreaCounter text="Prueba" />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+Notaras <textarea> toma el la propiedad defaultValue como opuesto al texto que escribiamos en el nodo hijo. Esto es por que hay algunos diferencias entre React y old-school HTML cuando hacemos form elements. Lo discutiremos mas adelante, Adicionalmente encontraras estas difrencias haran tu vida de desarrollador mas facil\\
+\section{Hacerlo Stateful}
+Ahora hagamos que el componente stateless sera un stateful. Basicamente actualizara su estado cada ves que sea actualizado
+Primero necesitas setear el estado inicial en la clase constructor usando this.state Ten en mente que el constructor es el unico lugar donde esta bien setear el estado directamente sin llamar this.setState().\\
+Es requerido iniciar this.state si no lo haces accessos consecutivos a this.state en el metodo render() fallaran\\
+En este caso no es necesario inicializar this.state.text con un valor como puedes ver a la paropiedad this.prop.text\\
+El dato de este componente es el contenido del textarea, entonce el estado tiene solo una propiedad llamada text, cual es accessible via this.state.text despues necesitas actualizar el estado puedes usar un metodo helper para este proposito
+\begin{lstlisting}[language=html]
+        onTextChange(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+\end{lstlisting}
+Siempre actualizaras el estado con this.setState(), cual toma un objeto y une con el dato existente en this.state. Como onTextChange() es un evento manejado que toma un evento y crece dentro para obtener el contenido del input textarea\\
+La ultima cosa es actualziar el metodo render render() configurando el event handler
+\begin{lstlisting}[language=html]
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <textarea
+                value={text}
+                onChange={(event) => this.onTextChange(event)}
+              />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+\end{lstlisting}
+Ahora donde sea que el usuario escriba en el textarea el contador de caracteres actualizara para reflejar el contenido
+\\
+En este ejemplo implementamos onChange significa que textarea es ahora controllado por React hablaremos mas de controlled components mas adelante.
+
+\section{Una nota sobre DOM Events}
+Para evitar confuciones, una pequenia clarificacion epara recordar la siguiente linea:
+\\
+\begin{lstlisting}[language=html]
+onChange={event => this.onTextChange(event)}
+\end{lstlisting}
+React usa su propio sistema de eventos synthetic para rendimiento(como bien es conveniente y saludable) Para entender por que necesitas considerar como estan hechas las cosas en el mundo puro DOM
+\section{Event Manejado en los viejos tiempos}
+Es conveniente usar manejador de eventos inline  para hacer cosas como esta
+\begin{lstlisting}[language=html]
+<button onclick="doStuff">
+\end{lstlisting}
+Mientras e conveniente y facil de leer(el event listener es correcto con el codigo de la UI)\\
+Es ineficiente tener muchos event listener como estos Es dificil tener mas que un listener en el mismo button, especialmente si dicho button esta en algunlado mas component o libreri y tu no quiere ir ahi y arreglarlo o hacer fork el codigo.\\
+Esto es por que el mundo DOM es comun usar element.addEventListener para configurar listeners(con cual ahora manejamos para tener un codigo en dos lugares o mas) una delegacion evento(para direccionar los problemas de rendimiento)\\
+Event delegation significa que tu escuchas a eventos en algun lugar del nodo padre. un <div> que contiene muchos buttons y tu configuras un listener para todos los buttons, en lugar de un listener para cada button. Entonces le dejas el manejo de evento a una autoridad paddre
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>React Application button handler</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="parent">
+      <button id="ok">OK</button>
+      <button id="cancel">Cancel</button>
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script>
+      document
+        .getElementById("parent")
+        .addEventListener("click", function (event) {
+          const button = event.target;
+
+          // Hace cosas diferentes basadas en que boton fue clickeado
+          switch (button.id) {
+            case "ok":
+              console.log("OK!");
+              break;
+            case "cancel":
+              console.log("Cancel");
+              break;
+            default:
+              new Error("Unexpected button ID");
+          }
+        });
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+Esto funciona y se lleva a cabo bien, pero hay drawbacks
+\begin{itemize}
+  \item Declarando el listener es mejro manera del componente UI, cual hace codigo dificil de encontrar y debugear
+  \item Usando delegacion  y simpre switch-ing creamos unnecesarios codigo builerplate incluso antes de hacer el trabajo(respondiendo al button click en este caso)
+  \item Inconcistencia de navegacion (omitido aqui) actualmente requiere este codigo para que sea largo
+\end{itemize}
+Desafortunadamente cuando esto viene tomandoesto codigo vive en el frente de usuarios reales necesitas un poco mas de adiciones si quieres que soporte navegadores antiguos
+\begin{itemize}
+  \item Necesitas attachEvent adicionalmente para addEventListener 
+  \item Necesitas const event = event || window.event; arriba del listener
+  \item Necesitas const button = event.target || event.srcElement;
+\end{itemize}
+Todo esto es necesario y hace suficiente que termines usando una libreria evento  de algun orden. Pero porque agregar otra libreria(y estudiando mas APIs)Cuando React viene bundled con una solucion al event-handling nightmares?
+\section{Manejo de Eventos en React}
+React usa eventos synteticos para envolver y normalizar los eventos del navegador. lo cual significa no habra inconsistencias en el navegador\\
+La sintasis hace hacil mantener la UI y el event listener juntos. React usa event delegation por razones de rendimientos\\
+React usa sintaxis camelCase para el evetnt handler entonces usamo onClick en lugar de onclick\\
+Si por alguna razon necesitas el evento original del browser esta disponible como event.nativeEvent\\
+El evento onChange(como se uso en el ejemplo textarea)comporta como esperas. Esto se enciendo cuando el usuario escibe opuesta a despues de que el escriba de escribir y haya navegado en el campo, lo cual es un comportamiento en DOM
+\section{Sintaxis de manejo de Event}
+En este ejemplo se usa una funcion =>  para llamar el helper  onTextChange
+\begin{lstlisting}[language=python]
+onChange={event => this.onTextChange(event)}
+\end{lstlisting}
+Esto es porque el onChange={this.onTextChange} no funcionara\\
+Otra opcion es bind el metodo como esto
+\begin{lstlisting}[language=python]
+onChange={this.onTextChange.bind(this)}
+\end{lstlisting}
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>React Application button handler</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="parent">
+      <button id="ok">OK</button>
+      <button id="cancel">Cancel</button>
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      class MyComponent extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+        }
+        conuntText(event) {
+          this.setState({ text: event.target.value });
+          console.log(event.target.defaultValue);
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <span>{this.props.name}</span>
+              <br />
+              <textarea onChange={this.conuntText.bind(this)} value={text} />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+      }
+      MyComponent.defaultProps = {
+        text: "Default",
+      };
+      ReactDOM.render(
+        <MyComponent name="Titor" />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+Y otra opcion y un patron comun es bind todos los eventos manejado en el contructor
+\begin{lstlisting}[language=html]
+      class MyComponent extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+          this.conuntText = this.conuntText.bind(this);
+        }
+        conuntText(event) {
+          this.setState({ text: event.target.value });
+          console.log(event.target.defaultValue);
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <span>{this.props.name}</span>
+              <br />
+              <textarea onChange={this.conuntText} value={text} />
+\end{lstlisting}
+
+
+ un poco necesario boilerplate, pero esta maenra el manejo de eventos se solo una ves opuesto a hacerlo cada vez llamado el metodo render() lo cual ayuda reducir el uso de la memoria en tu aplicacion\\
+ Este patron comun fue en gran parte reemplazada una ves es posible usar funciones como propiedades de clase en javascript
+\begin{lstlisting}[language=html]
+// Antes
+class TextAreaCounter extends React.Component {
+  constructor (){
+    super();
+    this.state = {}
+    this.myMethodEvent = this.myMethodEvent.bind(this);
+  }
+  myMethodEvent(event) {
+    this.setState({
+      .....
+    })
+
+  } 
+}
+// Despues
+class TextAreaCounter extends React.Component {
+  constructor() {
+    super();
+    ....
+  }
+  changeText = (event) => {
+    ....
+  }
+}
+\end{lstlisting}
+\begin{lstlisting}[language=html]
+      class MyComponent extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+        }
+        conuntText = (event) => {
+          this.setState({ text: event.target.value });
+          console.log(event.target.defaultValue);
+        };
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <span>{this.props.name}</span>
+              <br />
+              <textarea onChange={this.conuntText} value={text} />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+      }
+   
+\end{lstlisting}
+\section{Props Versus State}
+Ahora que conoces que tienes que acceder a this.props y this.state cuando cuando vienes a mostrar tus compoenntes en tu metodo render(). Ahora debes saber cuando usar el uno o el otro\\
+Las propiedades son mecanismos para el mundo de afuera para configurar tu componente. State es tu mantenmiento de datos internos. Entonces si tu consideras una analogia con OOP, this.props es como una collection de todos los argumentos pasados a la clase constructor, mientras this.state es una mochila de tus propiedades privadas \\
+En general, prefiere separar tu aplicacion en una manera que tu tienes pocos stateful components y mas stateless components \\
+
+\section{Props en estado inicial: Un Antipatron}
+\begin{lstlisting}[language=html]
+// Peligro esto es un Antipatron
+  this.state = {
+    text: props.text,
+  }
+\end{lstlisting}
+Esto es considrado un antipagron. Idealmente usas una conbinacion de this.state y this.props y como ves para construirlo en tu metodo render(). Pero algunas veces tu quieres tomar un valor pasado a tu componente y usarlo para construir el estado inicial. No hay nada de malo con esto excepto que las llamadas de tu componente puede esperar una propiedad(texto en el ejemplo) para siempre tener el ultimo valor, y el codigo violira este comportamiento esprado. PAra setear la expectativa directa, un simple cambio de nombramiento es suficiente por ejemplo llamado la propiedad algo como defaultText o initialValue en lugar de solo text
+\section{Accediendo al Componente desde afuera}
+Tu no siempre tienes el lujo de empezar una marca nueva React app desde cero \\
+Algunas veces necesitas un gancho dentro una applicacion existente o una website y migrarlo a React una piesa a la vez. Afortunadamente React fue diseniado para trabajar con cualquier codigobase preexistente que tengas. Despues de todo, el creador original de React no puede detener el mundo y reescribir una aplicacion entera(Facebook.com) desde 0 especialmente en el tempranos didas cuando React era joven.\\
+Una manera que tu aplicacion React puede comunicarse con el mundo de afuera es para tener una ferencia de un componente tu renderisas con ReactDOM.render() y los usas desde afuera del componente
+\begin{lstlisting}[language=html]
+const myTextAreaCounter = ReactDom.render(
+  <TextAreaCounter text="Bob" />,
+  document.getElementById("app")
+
+)
+\end{lstlisting}
+Ahora puedes usar myTextAreaCounter para acceder al mismo metodo y propiedades que normalmente accedias con esto cuando dentro del componente. Tu puedes incluso jugar con los componentes usando tu consola JavaScript
+\begin{lstlisting}[language=html]
+      const myTextAreaCounter = ReactDOM.render(
+        <MyComponent text="Bob" />,
+        document.getElementById("app"),
+      );
+\end{lstlisting}
+En este ejemplo myTextAreaCounter.state revisa el estado actual(inicialmente vacio); myTextAreaCounter.props revisa las propiedades y esta linea setea un nuevo estado\\
+\begin{lstlisting}[language=html]
+myTextAreaCounter.setState({text: "Hello outside world!"});
+\end{lstlisting}
+Esta linea obtiene una referencia al padre nodo principal DOM que React crea
+\begin{lstlisting}[language=html]
+const reactAppNode = ReactDOM.findDOMNode(myTextAreaCounter)
+\end{lstlisting}
+\section{Ciclo de vida Methodos}
+React ofrese muchos mmetodos llamados lifecycle. Puedes usar el metodos lifecycle para escuchar cambios  tus componentes\\
+La vida de un componentes viene atravez de tres pasos:
+
+\begin{itemize}
+  \item Mounting, El componente es agregado al DOM inicialmente 
+  \item Updating, El componente es actualizado como un resultado del llamado setState() y/o proyendo prop al componente cambiado\\
+  \item Unmounting, El componente es removido del DOM
+\end{itemize}
+React se hace parte de este trabajao antes actualizar el DOM. Esto es tambien llamado la fase de renderisado. Despues esto actualiza el DOM y elsta fase es llamado una fase commit Con el background considremos algunso lifecycle methods
+\begin{itemize}
+    \item Despues del montaje inicial y despues de commit el DOM, tus comopnentes metodo componentDidMount() es llamado, si existe. Este es el lugar para hacer cualquier inicializacion funcione como requiere el DOM. Cualquier inicializacion funciona que no requiere el DOM debe estar en el contructor.\\
+    Y mas de tu inicializacion no deberia requerir el DOM. Pero en este metodo puedes por ejemplo asegurarte el altura del componente que fue solo renderizado, agregar cualquier event listener addEventListener('resize') u obtener los cambios del servidor.
+    \item Antes deque el componente es removido del DOM, el metodo componentWillUnmount() es llamado. Este es el lugar para hacer un clean que necesitaras. Cualquier evento manejado, o cualquier cosa que puede filtrar memorya, deberia ser limpiada, despues de esto el componente se fue para siempre
+    \item componentDidUpdate(previousProps, previousState, snapshot) esto es llamado donde sea el componente fue actualizado. Desde este punto this.props y this.state tienen actualizado valores, tendras una copia previa. Puedes usar esta informacion para conparar el viejo y el nuevo estado y potencialmente hacer mas request a la red si es necesario.
+    \item Y despues hay shouldComnponentUpdate(newProps, newState) cual es una oportunidad para una optimizacion. Estas dando el estado que sera cual puedes comporar casos si el metodo render() no es llamado
+\end{itemize}
+De estos componentDidMount() y componentDidUpdadte() son los mas comunes
+\section{lifecycle ejemplo: Log it All}
+Para un mejor entendimiento la vida de un componente, agreguemos algunos logging en el TextArea counter component. Simplemente implementando todo el metodo lifecycle para log a la consola cuando ellos estan invocados, juntos con ningun argumento:
+\begin{lstlisting}[language=html]
+      class TextAreaCounter extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+        }
+        countEvent = (event) => {
+          this.setState({
+            text: event.target.value,
+          });
+        };
+        componentDidMount() {
+          console.log("componentDidMount");
+        }
+        componentWillUnmount() {
+          console.log("componentWillUnmount");
+        }
+        componentDidUpdate(prevProps, prevState, snapshot) {
+          console.log("componentDidUpdate", prevProps, prevState);
+          return "Hello";
+        }
+        shouldComponentUpdate(newProps, newState) {
+          console.log("shouldComponentUpdate", newProps, newState);
+          return true;
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <textarea
+                onChange={this.countEvent.bind(this)}
+                defaultValue="Editing.."
+                value={text}
+              />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+      }
+      TextAreaCounter.defaultProp = {
+        text: "Default text",
+      };
+      const myTextAreaCounter = ReactDOM.render(
+        <MyComponent text="Bob" />,
+        document.getElementById("app"),
+      );
+      //      ReactDOM.render(<TextAreaCounter />, document.getElementById("app"));
+\end{lstlisting}
+Despues de cargar la pagina, el unico mensaje que sale la consola es componentDidMount\\
+Luego cuando escribes algo en el textarea se llama al metodo shouldComponentUpdate() con los nuevos props(iguales al anterior) y el nuevo estado.\\
+Desde este metodo retorna true, React procede llamado getSnapShotBeforeUpdate() pasando las viejas props y state. Esto es tu chance para hcaer algo con ellos y con el viejo DOM y pasar cualquier informacion como un snapshot al siguiente metodo. \\
+Por ejemplo esto es una oportunidad para hacer algunas medidas de elemento  o un posicion scroll y snapshot despues ves si ellos cambiaron despues del update. Finalmente componentDidUpdate() es llamado con la vieja informacion(tienes el nuevo en this.state y this.props) y cualquier snapshot definido por el metodo previo
+Finalmente  para demostrar componentWillUnmount() en accion (usando el ejemplo) puedes escribir en la consola
+\begin{lstlisting}[language=html]
+ReactDOM.render(React.createElement('p', null, 'Enough counting!'), app);
+\end{lstlisting}
+Esto remplaza todo el textare component con un nuevo <p> component. Despues podras ver el mensaje componentWillUnmount en la consola
+\section{Paranoid State Protection}
+Decir que tu quieres restringir el numero de caracteres a ser escrito en el textare. Podrias hacer esto en el event handler onTextChange(), cual es llamar como el usertypes\\
+Pero que si alguien llama setState() desde fuera del componente (como mensione antes, es una mala idea?) puedes todavia estar protegido la inconsitencia y haciendo buen componente? Seguro. Puedes hacer la validacion en componentDidUpdate() y si el numero de caracteres es mayor que el permitido, revierte el estado algo como esto.
+\begin{lstlisting}[language=html]
+componentDidUpdate(prevPros, prevState) {
+  if (this.satte.text.length > 3) {
+    this.setState({
+      text: prevState.text || this.props.text
+    })
+  }
+  }
+   
+\end{lstlisting}
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>React Application</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      class TextAreaCounter extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+          this.countEvent = this.countEvent.bind(this);
+        }
+        countEvent = (event) => {
+          this.setState({
+            text: event.target.value,
+          });
+        };
+        componentDidMount() {
+          console.log("componentDidMount");
+        }
+        componentWillUnmount() {
+          console.log("componentWillUnmount");
+        }
+        /*
+        componentDidUpdate(prevProps, prevState, snapshot) {
+          console.log("componentDidUpdate", prevProps, prevState);
+          if (this.state.text.length > 3) {
+            this.setState({
+              text: prevState.text || this.props.text,
+            });
+          }
+          return "Hello";
+        }
+        */
+        shouldComponentUpdate(_, newState) {
+          console.log("shouldComponentUpdate", newState);
+          return newState.text.length > 3 ? false : true;
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <textarea onChange={this.countEvent} value={text} />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+      }
+      TextAreaCounter.defaultProp = {
+        text: "Default text",
+      };
+      const myTextAreaCounter = ReactDOM.render(
+        <TextAreaCounter text="Bob" />,
+        document.getElementById("app"),
+      );
+      //      ReactDOM.render(<TextAreaCounter />, document.getElementById("app"));
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+\section{lifecycle ejemplo: Usando un componente hijo}
+Tu sabes que puedes juntar y anidar React components como quieras. Tienes solo tienes que ver ReactDOM components en el metodo render() hechemos un vistaso a otro simple custom component a ser usado como un hijo\\
+Aisla la parte responsable para el ocunter dentor su propio componente despues despues todo, divide y conquista lo es todo.\\
+Primero isolemos el lifestyle loggin dentro una clase separada y tendras los components heredados . \\
+Heerencia es nunca garantisado cuando viene a React porque para el trabajo UI, composicion es preferible y por nonUI funcione. un modulo regular javascript podria hacerlo. Todavia es util saber como funciona, y esto te ayuda a evitar copy-pasting el metodo logging\\
+Este es el padre:
+\begin{lstlisting}[language=html]
+      class LifecycleLoggerComponent extends React.Component {
+        static getName() {}
+        componentDidMount() {
+          console.log(this.constructor.getName() + "::componentDidMount");
+        }
+        componentWillUnmount() {
+          console.log(this.constructor.getName() + "::componentWillUnmount");
+        }
+        componentDidUpdate(prevProps, prevState, snapshot) {
+          console.log(this.constructor.getName() + "::componentDidUpdate");
+        }
+      }
+\end{lstlisting}
+El nuevo componente count siempre muestra count no mantiene el estado pero muestra la propiedad count dato por los padres
+\begin{lstlisting}
+      class Counter extends LifecycleLoggerComponent {
+        static getName() {
+          return "Counter";
+        }
+        render() {
+          return <h3>{this.props.count}</h3>;
+        }
+      }
+      Counter.defaultProps = {
+        count: 0,
+      };
+\end{lstlisting}
+El component textarea configura un static metodo getName()
+\begin{lstlisting}[language=html]
+class TextAreaCounter extends LifecycleLoggerComponent {
+  static getName() {
+    return 'TextAreaCounter';
+  }
+  }
+\end{lstlisting}
+Y finalmente el textarea render() obtendra el uso de <Counter /> y lo usara condicionalmente;
+si el count es 0, no mostrara nada 
+\begin{lstlisting}[language=html]
+         render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <textarea value={text} onChange={this.onTextChange} />
+              {text.length > 0 ? <Counter count={text.length} /> : null}
+            </div>
+          );
+        }
+      }
+\end{lstlisting}
+
+\section{Rendimiento Win: Prevenit Actualizacion de componentes}
+Ya conoces sobre shouldComponentUpdate() y lo viste en accion.
+Es especialmente importante cuando construimos rendimiento-critico  para tu aplicacion Esta invocando antes componentWillUpdate() y da chance de cancelar el update si asi lo decides\\
+Hay una clase de componentes que usa solo this.props y this.state en su metodos render() y no funciones adicionales a llamar. Estos compoenntes son llamados componentes puros  Ellos pueden implementar shouldComponentUpdate() y compara el estado y las propiedades antes y despues de un update y si no hay cambios retornan false y guardan alguna energia de procesamiento. ellos pueden ser pure static components que usa neither props nor state. Estos pueden asegurar retornar falso\\
+React puede hacerlo facil revisando todos los props y states en shouldComponentUpdate() en lugar de repetir este trabajo puedes tener tus componentes heredados React.PureComponent y que los metodos getName sean static de esta manera no necesitaras implementar shouldComponentUpdate() Esta hecho para ti. \\
+Desde heredamos ambos componentes  el logger todo lo que necesitas es
+
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React Practice child component</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../reactbook/react/react.js"></script>
+    <script src="../reactbook/react/react-dom.js"></script>
+    <script src="../reactbook/react/babel.js"></script>
+    <script type="text/babel">
+      class MyParentComponent extends React.PureComponent {
+        static getName() {}
+        componentDidUpdate() {
+          console.log(this.constructor.getName() + "::componentDidUpdate");
+        }
+        componentDidMount() {
+          console.log(this.constructor.getName() + "::componentDidMount");
+        }
+        componentWillUnmount() {
+          console.log(this.constructor.getName() + "::componentWillUnmount");
+        }
+      }
+      class Counter extends MyParentComponent {
+        static getName() {
+          return "Counter";
+        }
+        render() {
+          console.log(this.constructor.getName() + " :: render");
+          return <h3>{this.props.count}</h3>;
+        }
+      }
+      Counter.defaultProps = {
+        count: 0,
+      };
+
+      class TextBoxCounter extends MyParentComponent {
+        static getName() {
+          return "TextBoxCounter";
+        }
+        constructor() {
+          super();
+          this.state = {};
+          this.textCapture = this.textCapture.bind(this);
+        }
+        textCapture(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+        render() {
+          console.log(this.constructor.getName() + " :: render");
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              {" "}
+              <textarea onChange={this.textCapture} value={text} />
+              {text.length > 0 ? <Counter count={text.length} /> : null}
+            </div>
+          );
+        }
+      }
+      TextBoxCounter.defaultProps = {
+        text: "Default",
+      };
+      const MyRenderComponent = ReactDOM.render(
+        <TextBoxCounter />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+Notaras que cargando la pagina los componentes se renderisan y montan
+\\TextAreaCounter::render
+\\Counter::render
+\\Counter::componentDidMount
+\\TextAreaCounter::componentDidMount
+\\
+Haciendo cambios aumentando texto los componentes se renderizaran y actualizaran
+\\TextAreaCounter::render
+Counter::render
+Counter::componentDidUpdate
+TextAreaCounter::componentDidUpdate
+\\
+Y si remplasas el texto de el texbox con otra palabra de la misma cantidad de caracteres \\
+TextAreaCounter::render\\
+TextAreaCounter::componentDidUpdate\\
+Veras que el re-render Counter ya no es ejecutado por que la cantidad de caracteres sigue siendo la misma
+

@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <title>React Application button handler</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="parent">
+      <button id="ok">OK</button>
+      <button id="cancel">Cancel</button>
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      class MyComponent extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+        }
+        conuntText(event) {
+          this.setState({ text: event.target.value });
+          console.log(event.target.defaultValue);
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <span>{this.props.name}</span>
+              <br />
+              <textarea onChange={this.conuntText.bind(this)} value={text} />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+      }
+      MyComponent.defaultProps = {
+        text: "Default",
+      };
+      ReactDOM.render(
+        <MyComponent name="Titor" />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>

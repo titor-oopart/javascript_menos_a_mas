@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My App Seach on a table</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../reactbook/03.table.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../reactbook/react/react.js"></script>
+    <script src="../reactbook/react/react-dom.js"></script>
+    <script src="../reactbook/react/babel.js"></script>
+    <script src="../reactbook/react/prop-types.js"></script>
+    <script type="text/babel">
+      function clone(o) {
+        return JSON.parse(JSON.stringify(o));
+      }
+      class MyApp extends React.Component {
+        constructor(props) {
+          super();
+          const data = clone(props.initialData).map((row, idx) => {
+            row.push(idx);
+            return row;
+          });
+          this.state = { data, search: false };
+          this.preSearchData = null;
+          this.toggleSearch = this.toggleSearch.bind(this);
+          this.search = this.search.bind(this);
+        }
+        search(e) {
+          const needle = e.target.value.toLowerCase();
+          if (!needle) {
+            this.setState({ data: this.preSearchData });
+            return;
+          }
+          const idx = e.target.dataset.idx;
+          const searchdata = this.preSearchData.filter((row) => {
+            return row[idx].toString().toLowerCase().indexOf(needle) > -1;
+          });
+          this.setState({ data: searchdata });
+        }
+        toggleSearch() {
+          if (this.state.search) {
+            this.setState({
+              data: this.preSearchData,
+              search: false,
+            });
+            this.preSearchData = null;
+          } else {
+            this.preSearchData = this.state.data;
+            this.setState({ search: true });
+          }
+        }
+        render() {
+          const searchRow = !this.state.search ? null : (
+            <tr onChange={this.search}>
+              {this.props.headers.map((_, idx) => (
+                <td key={idx}>{<input type="text" data-idx={idx} />}</td>
+              ))}
+            </tr>
+          );
+          return (
+            <div>
+              <button className="toolbar" onClick={this.toggleSearch}>
+                {this.state.search ? "Hide Search" : "Show Search"}
+              </button>
+              <table>
+                <thead>
+                  <tr>
+                    {this.props.headers.map((title, idx) => (
+                      <th key={idx}>{title}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {searchRow}
+                  {this.state.data.map((row, idx) => {
+                    const recordId = row[row.length - 1];
+                    return (
+                      <tr key={recordId} data-row={recordId}>
+                        {row.map((cell, cidx) => {
+                          if (cidx === this.props.headers.length) {
+                            return;
+                          }
+                          return <td key={cidx}>{cell}</td>;
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
+      }
+      const headers = ["Book", "Author", "Language", "Published", "Sales"];
+      const data = [
+        [
+          "A Tale of Two Cities",
+          "Charles Dickens",
+          "English",
+          "1859",
+          "200 million",
+        ],
+        [
+          "Le Petit Prince (The Little Prince)",
+          "Antoine de Saint-Exupéry",
+          "French",
+          "1943",
+          "150 million",
+        ],
+        [
+          "Harry Potter and the Philosopher's Stone",
+          "J. K. Rowling",
+          "English",
+          "1997",
+          "120 million",
+        ],
+        [
+          "And Then There Were None",
+          "Agatha Christie",
+          "English",
+          "1939",
+          "100 million",
+        ],
+        [
+          "Dream of the Red Chamber",
+          "Cao Xueqin",
+          "Chinese",
+          "1791",
+          "100 million",
+        ],
+        ["The Hobbit", "J. R. R. Tolkien", "English", "1937", "100 million"],
+      ];
+      ReactDOM.render(
+        <MyApp headers={headers} initialData={data} />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>

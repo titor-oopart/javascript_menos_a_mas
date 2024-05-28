@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React Practice child component</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../reactbook/react/react.js"></script>
+    <script src="../reactbook/react/react-dom.js"></script>
+    <script src="../reactbook/react/babel.js"></script>
+    <script type="text/babel">
+      class MyParentComponent extends React.Component {
+        getName() {}
+
+        componentDidUpdate() {
+          console.log(this.getName(), " componentDidUpdate");
+        }
+        componentDidMount() {
+          console.log(this.getName(), " componentDidMount");
+        }
+        componentWillUnmount() {
+          console.log(this.getName(), " componentWillUnmount");
+        }
+      }
+      class Counter extends MyParentComponent {
+        getName() {
+          return "Counter";
+        }
+        render() {
+          return <h3>{this.props.count}</h3>;
+        }
+      }
+      Counter.defaultProps = {
+        count: 0,
+      };
+
+      class TextBoxCounter extends MyParentComponent {
+        getName() {
+          return "TextBoxCounter";
+        }
+        constructor() {
+          super();
+          this.state = {};
+          this.textCapture = this.textCapture.bind(this);
+        }
+        textCapture(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              {" "}
+              <textarea onChange={this.textCapture} value={text} />
+              {text.length > 0 ? <Counter count={text.length} /> : null}
+            </div>
+          );
+        }
+      }
+      TextBoxCounter.defaultProps = {
+        text: "Default",
+      };
+      const MyRenderComponent = ReactDOM.render(
+        <TextBoxCounter />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>

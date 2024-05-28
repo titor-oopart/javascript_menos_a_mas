@@ -1,0 +1,44 @@
+<!DOCTYPR html>
+<html>
+  <head>
+    <title>React Loop app</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="table"></div>
+    <script src="../reactbook/react/react.js"></script>
+    <script src="../reactbook/react/react-dom.js"></script>
+    <script src="../reactbook/react/babel.js"></script>
+    <script type="text/babel">
+      class ExcelComponent extends React.Component {
+        render() {
+          const headers = [];
+          for (const idx in this.props.headers) {
+            const text = this.props.headers[idx];
+            console.log(idx, text);
+            headers.push(
+              <th id={idx} key={idx}>
+                {text}
+              </th>,
+            );
+          }
+          return (
+            <div>
+              <h1>Hello</h1>
+              <table>
+                <thead>
+                  <tr>{headers}</tr>
+                </thead>
+              </table>
+            </div>
+          );
+        }
+      }
+      const headers = ["Anio", "Enero", "Febrero"];
+      ReactDOM.render(
+        <ExcelComponent headers={headers} />,
+        document.getElementById("table"),
+      );
+    </script>
+  </body>
+</html>

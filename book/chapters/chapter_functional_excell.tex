@@ -1,0 +1,557 @@
+\chapter{Functional Excell}
+Recuerdas function compomponent, En algun punto del capitulo2 tan pronto como el state viene dentro la imagen, los function components dejan caer de la discussion. Es hora de volver a ellos \\
+\section{Un pequenio recordatorio: Function versus Class Components}
+En este simple formulario una class component solo necesita un metodo render(). Este es donde construyes la UI, opcionalmente usando this.prop y this.state
+\begin{lstlisting}[language=html]
+class Widget extends React.Componet{
+    render(){
+        let ui;
+        return <div>{ui}</div>;
+      }
+  }
+\end{lstlisting}
+En un function component todo el component es la funcion y la UI lo que la funcion retorna. El props es pasado a la funcion cuando el componente es construido
+\begin{lstlisting}[language=html]
+function Widget(props){
+    let ui
+    return <div>{ui}</div>;
+  }
+   
+\end{lstlisting}
+El menor uso de componentes funciones termina con React v16.8 puedes usarlos solo para componentes que no mantienen un stado (stateless components). Pero con la addicion de hooks en v16.8 ahora es posible usar funciones donde sea a travez de rest de este capitulo veras como el Excell component puede ser implementado como un componente funcion
+\section{Renderisando el Data}
+El primer paso es renderizar el dato pasado al componente. Como el componente es usado no cambia. En otras plabras un desarrollador usando tu componente no necesita saber si es un componente clase o una funcion. El initialData y headers props parecen iguales. Incluso el propTypes definition son el mismo
+\begin{lstlisting}[language=html]
+function Ecel(props){
+  }
+  Excel.propTypes = {
+      headers: PropTypes.arrayOf(PropTypes.string),
+      initialData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+    }
+    const headers = ['Book', 'Author', 'Language', 'Published', 'Sales'];
+    const data = [
+      [
+        'A Tale of Two Cities', 'Charles Dickens', // ...
+      ],
+      //
+      ReactDOM.render(
+        <Excel headers={headers} initialData={data} />,
+        document.getElementById('app'),
+      );
+\end{lstlisting}
+Implementando este body de la funcion component es copy-paste el body del render() method de la clase component
+\section{The State Hook}
+Para mantener el estado en los componentes funciones, necesitas hooks. Que es un Hook? Es una funcion con un prefijo * que te deja usar varias React features, como herramientas para manejar estados y componentes lifecycles. Puedes tambien crear tu propio hook. Al final del capiutlo aprendereas como usar muchos build-in hooks como bien escribir tus propios hooks.\\
+Empecemos con el estado hooks. Es una funcion llamada useState() esta disponible como propiedad de React object(React.useState()). Esto toma un valor, el valor inicial de una variable estado(una piesa de dato que quieres manejar), y retorna un array de dos elementos (una tupla. El primero es la variable estado)(una piesa de dato que quieres manejar) y retorna un array de dos elementos( una tupla)El primer elemento es la variable estado y el segundo es una funccion para cambiar esta variable. Veamos un ejemeplo\\
+En la clase componenet, en el contructur definimos el valor inicial
+\begin{lstlisting}[language=html]
+hit.state = {
+  data:initialData;
+  }
+\end{lstlisting}
+Despues de eso, cuando quieres cambiar el estado del dato, puedes 
+\begin{lstlisting}[language=html]
+this.setState({
+  data: newData,
+  })
+\end{lstlisting}
+En una function component, ambos definien el estado inicial y obetiene una funcion updater
+\begin{lstlisting}[language=html]
+const [data, setData] = React.useState(initialData);
+\end{lstlisting}
+Para renderizar, puedes ahora usar la variable data. Cuando quierras actualizar este variable usar
+\begin{lstlisting}[language=html]
+setData(newData);
+\end{lstlisting
+Reescribiendo el componente para usar el estado hook puedes ahora ver algo como esto
+\begin{lstlisting}[language=html]
+      function Excel({ headers, initialData }) {
+        const [data, setData] = React.useState(initialData);
+
+        return (
+          <table>
+            <thead>
+              <tr>
+                {headers.map((title, idx) => (
+                  <th key={idx}>{title}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row, idx) => (
+                <tr key={idx}>
+                  {row.map((cell, cidx) => (
+                    <td key={cidx}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        );
+      }
+\end{lstlisting}
+A travez del ejemplo no usamos setDatat() puedes ver como esta usando el state data. Movamonos en el sorting de la tabla
+\section{Sorting the data}
+En una componente clase, todos los varios bits de estado van dentro del objeto this.state una mochila grab piesas no relacionadas de informacion. usando el hook state puede todavia hacer lo mismo, pero tu tambien puedes cedidir manetner la piesa del estado en diferentes variables. Cuando esto viene a ordenar una tabla el dato contiene en la tabla es una piesa de informacion mientras el auxiliar orden especificado informacion es en otra piesa. En otras palabras, puedes usar el state hook cuantas veces como quieras.
+\begin{lstlisting}[language=html]
+      function Excel({ headers, initialData }) {
+        const [data, setData] = React.useState(initialData);
+        const [sorting, setSorting] = React.useState({
+          column: null,
+          descending: false,
+        });
+\end{lstlisting}
+El dato es lo que muestras en la tabla; el objeto sorting es algo separado. Es sobre como ordenas (ascendiente o descendiente) y por que columna(titulo, author, etc)\\
+La funcion que no ordena es ahora en linea dentro la funcion Excell
+\begin{lstlisting}[language=html]
+function Excell({headers, initialData}){
+  // ....
+  function sort(e){
+    // implementacion
+  }
+  return (
+  // JSX
+  )
+  }
+\end{lstlisting}
+La funcion sort() figura fuera que columna ordenar (usando este index) y  donde el orden es descendiente
+\begin{lstlisting}[language=html]
+const column = e.target.cellIndex;
+const descending = sorting.column === column && !sorting.descending;
+\end{lstlisting}
+Despues, esto clona el array del dato porque es una mala idea modificar el estado directamente
+\begin{lstlisting}[language=html]
+const dataCopy = clone(data);
+\end{lstlisting}
+El actual sorting es el mismo de antes
+\begin{lstlisting}[language=html]
+        function sort(e) {
+          const column = e.target.cellIndex;
+          const descending = sorting.column === column && !sorting.descending;
+          const dataCopy = clone(data);
+          dataCopy.sort((a, b) => {
+            if (a[column] === b[column]) {
+              return 0;
+            }
+            return descending
+              ? a[column] > b[column]
+                ? 1
+                : -1
+              : a[column] < b[column]
+                ? 1
+                : -1;
+          });
+          setData(dataCopy);
+          setSorting({ column, descending });
+        }
+\end{lstlisting}
+Finalmente actualizamos las dos piesas de estado con los nuevos valores
+\\
+Ahora actualicemos la UI
+\begin{lstlisting}[language=html]
+        return (
+          <table>
+            <thead onClick={sort}>
+              <tr>
+                {headers.map((title, idx) => {
+                  if (sorting.column === idx) {
+                    title += sorting.descending ? " \u2191" : " \u2193";
+                  }
+                  return <th key={idx}>{title}</th>;
+                })}
+              </tr>
+\end{lstlisting}
+Tu puedes notar otra buena cosa sobre usar state hooks: no necesitas usar bind ninguna funcion como haces en el constructor de una class component. Ninguno de esto this.sort = this.sort.bind(this)
+\section{Editando los datos}
+Como recuerdas se podia editar las celdas, para tackear el proceso agregamos un editstate object
+\begin{lstlisting}[language=html]
+        function showEditor(e) {
+          setEdit({
+            row: parseInt(e.target.parentNode.dataset.row, 10),
+            column: e.target.cellIndex,
+          });
+        }
+        function save(e) {
+          e.preventDefault();
+          const input = e.target.firstChild;
+          const dataCopy = clone(data);
+          dataCopy[edit.row][edit.column] = input.value;
+          setEdit(null);
+          setData(dataCopy);
+        }
+\end{lstlisting}
+Y con esto la funcionalidad de editar estaria completa
+\begin{lstlisting}[language=html]
+ <tbody onDoubleClick={showEditor}>
+              {data.map((row, idx) => (
+                <tr key={idx} data-row={idx}>
+                  {row.map((cell, cidx) => {
+                    if (edit && edit.row === idx && edit.column === cidx) {
+                      cell = (
+                        <form onSubmit={save}>
+                          <input type="text" defaultValue={cell} />
+                        </form>
+                      );
+                    }
+                    return <td key={cidx}>{cell}</td>;
+                  })}
+                </tr>
+              ))}
+            </tbody>
+\end{lstlisting}
+\section{Searching}
+Searching/filtering  los datos no es un nuevo reto cuando viene con React y Hooks, puedes tratar de implementarlo por tu cuenta
+\begin{lstlisting}[language=html]
+        const [search, setSearch] = useState(null);
+        const [preSearchData, setPreSearchData] = useState(null);
+
+        function toggleSearch() {
+          if (search) {
+            setData(preSearchData);
+            setSearch(false);
+            setPreSearchData(null);
+          } else {
+            setPreSearchData(data);
+            setSearch(true);
+          }
+        }
+
+        function searching(e) {
+          const needle = e.target.value.toLowerCase();
+          if (!needle) {
+            setData(preSearchData);
+            return;
+          }
+          const idx = e.target.dataset.idx;
+          const searchdata = preSearchData.filter((row) => {
+            return row[idx].toString().toLowerCase().indexOf(needle) > -1;
+          });
+          setData(searchdata);
+        }
+end{lstlisting}
+\section{lifecycles en el mundo de los Hooks}
+En el capiutlo 3 usamos el componentDidMount() y el componentWillUnmount()
+\section{Problemas con el lifecycles methods}
+Si tu vuelves a visitar el ejmeplo table-fetch podrias notar cada uno de esos tiene dos tareas no relacionadas a la otra
+\begin{lstlisting}[language=html]
+componentDidMount(){
+  document.addEventListener('keydown', this.keydownHandler);
+  fetch('https://www...')
+    .then(/*...*/)
+    .then((initialData) => {
+      /*...*/
+      this.setState({data});
+    });
+  }
+
+componentWillUnmount(){
+  document.removeEventListener('keydown', this.keydownHandler);
+  clearInterval(this.reaplayID);
+  }
+\end{lstlisting}
+En la funcion componentDidMount() configuras un keydown listener para iniciar el replay y tambien el fetch data desde el server. En componentWillUnmount() eliminas el keydown listener y tambien limpias un setInterval() ID. Esto ilustra dos problemas relacionados a el uso de metodos lifecycle  en class components(cual estan resolviendo cuando usamos hooks)
+\section{useEffect()}
+El buildt in hook que remplaza ambos del lifecycles sobre le React.use Effect()
+La palabra effect stands para lado effecto significando un tipo de trabajo que esta no relacionado a la tarea principal pero pasa alrededor del mismo tiempo. La tarea pirncipal de cualquier componente react es renderisar alguna cosa basada en el estado y props. pero renderisando al mismo tiempo en la misma funcion al rededor de pocos lugares de trabajo como es la obtencion de datos desde un servidor o configurando event listener sera necesario.
+\\
+En el componente Excell por ejemplo configurando un manejador keydown es un lado efecto de la tarea principal de renderisado datos en un tabla
+\section{El hook useEffect() toma dos argumentos}
+\begin{itemize}
+  \item Una funcion callback que es llamada por react en el tiempo oportuno
+  \item Un array opcional de dependencias
+\end{itemize}
+La lista de dependencias contiene variables que seran revisadas antes que el callback es invocado y dictado donde el callback deberia incluso ser invocado.
+\begin{itemize}
+  \item Si el valor de la variable dependendiente no tiene cambios, no hay necesidad de invocar el callback
+  \item Si la lista de dependencias es un array vacio, el callback es llamado solo una vez, miliar al componentDidMount()
+  \item si la dependencias son omitidas, el callback es invocado cada render
+\end{itemize}
+\begin{lstlisting}[language=html]
+useEffect(() => {
+  // logs only if 'data' o 'headers' tienen cambios
+  console.log(Data.now());
+}, [data, headers])
+
+useEffect(() => {
+  // logs once, after initial render, like 'componentDidMount()'
+  console.log(Data.now());
+  })
+
+useEffect(() => {
+  // called on every re-render
+  console.log(Date.now());
+  }, /* no dependencies here */)
+\end{lstlisting}
+\section{Limpiando side effects}
+Ahora conoces como usar hooks para completar que componentDidMount() tiene que ofreser en class components. Pero que sobre un equivalente para componentWillUnmount()? para esta tarea, usaras el return value desde la funcion callback pasaras useEffect()
+\begin{lstlisting}[language=html]
+useEffect(()=> {
+  // logs once, after initial render, like 'componentDidMount()'
+  console.log(Date.now())
+  return() => {
+    // log when the component will be removed form the DOM
+    // like 'componentDidMount()'
+    console.log(Date.now());
+  }
+})
+\end{lstlisting}
+Veamos un ejemplo mas completo
+\begin{lstlisting}[language=html]
+      const useState = React.useState;
+      const useEffect = React.useEffect;
+      function Example() {
+        useEffect(() => {
+          console.log("Rendering <Example/>", Date.now());
+          return () => {
+            // log when the component will be removed form the DOM
+            // like `componentDidMount()`
+            console.log("Removing <Example/>", Date.now());
+          };
+        }, []);
+        return <p>I am an example child component.</p>;
+      }
+
+      function ExampleParent() {
+        const [visible, setVisible] = useState(false);
+        return (
+          <div>
+            <button onClick={() => setVisible(!visible)}>
+              Hello there, press me {visible ? "again" : ""}
+            </button>
+            {visible ? <Example /> : null}
+          </div>
+        );
+      }
+
+      ReactDOM.render(<ExampleParent />, document.getElementById("app"));
+\end{lstlisting}
+Haciendo click el boton una ves renderisa un componente hijo y haciendo click de nuevo lo remueve
+\\
+Como puedes ver el valor return useEffect() (es una funcion) es invocado cuando el componente es removido desde el DOM\\
+Nota que la funcion cleanup cuando el componente es removido desde el DOM por que la dependencias array esta vacia. Si hay un valor en la dependencia de array, la funcion terdown sera llamada dondesea el valor de la dependencia cambie
+\section{Problema-gratis lifecycles}
+Si consideras de nuevo el caso de uso de configuracion y limpiado de event listener. esto puede ser implementado como
+\\begin{lstlisting}[language=html]
+useEffect(() => {
+  function keydownHandler(){
+    // hace cosas
+  }
+  document.addEventListener('keydown', keydownHandler);
+  return() => {
+    document.removeEventListener('keydown', keydownHandler);
+  }
+}, []);
+\end{lstlisting}
+El patron soluciona el segundo problema con class-based metodo lifecycle mencionado previamente el problema de spreading relacionado a las tareas al rededor del componente. Aqui puedes ver como usando hooks permite tener la funcion manejador. esta configurada, y esta removida, todo en el mismo ejemplo\\
+Como el primer problema(teniendo tareas no relacionadas en el mismo lugar), esto es resuelto teniendo multiples llamadas useEffect, cada una dedicada a una tarea especifica. Similar a como puedes tener piesas separadas del estado en lugarde una mochila grabada de objetos, puedes tambien tener separado la llamada useEffect, cada direccion un asunto separado, como opuesto a un metodo clase simple que necesita tener cuidado de cadacosa:
+\begin{lstlisting}[language=html]
+funcion Example(){
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    // fetch() and then call setData()
+  });
+
+  useEffect(() => {
+    // event handlers
+  });
+
+  return <div>{dadta}</div>;
+  }
+\end{lstlisting}
+\section{useLayoutEffect()}
+Para envolver la discucion de useEffect() consideremos otro built-in hook llamado useLayoutEffect()\\
+useLayoutEffect() funciona como useEffect(), la unica diferencia siendo eso esta invocada antes React esta completado pintando todo los nodos DOM de un render. En general, deberias usar useEffect() hasta que no lo ncesites para medir algunas cosas en la pagina(talvez dimensiones) de un componente renderisado o la posicion de scrolling despues de una actualizacion y despues rerenderizar basado en esta informacion. Cuando ninguno de estos es requeridos, useEffect() es mejor como asynchronous y tambien indica al render de tu codigo que las mutaciones DOM no son relevantes a tu componente\\
+Porque useLayoutEffect() es llamado sooner, Puedes recarlcular y rerenderisar y el usuario el usuario vera el ultimo render. otramanera, ellos veran el render inicial primero, despues el segundo render. dependiendo que tan complicado usa el layout, los usuarios pueden persivir un flicker entre los dos render\\
+El siguiente ejemplo(04.07.useLayoutEffect.html) renderisa una larga tabla con ancho random de celdas. despues el ancho de la tabla es seteado en el effect hook
+\begin{lstlisting}[language=html]
+      const { useState, useEffect, useLayoutEffect } = React;
+
+      function Example({ layout }) {
+        if (layout === null) {
+          return null;
+        }
+
+        if (layout) {
+          useLayoutEffect(() => {
+            const table = document.getElementsByTagName("table")[0];
+            console.log(table.offsetWidth);
+            table.width = "250px";
+          }, []);
+        } else {
+          useEffect(() => {
+            const table = document.getElementsByTagName("table")[0];
+            console.log(table.offsetWidth);
+            table.width = "250px";
+          }, []);
+        }
+
+        return (
+          <table>
+            <thead>
+              <tr>
+                <th>Random</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from(Array(10000)).map((_, idx) => (
+                <tr key={idx}>
+                  <td width={Math.random() * 800}>{Math.random()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        );
+      }
+
+      function ExampleParent() {
+        const [layout, setLayout] = useState(null);
+        return (
+          <div>
+            <button onClick={() => setLayout(false)}>useEffect</button>{" "}
+            <button onClick={() => setLayout(true)}>useLayoutEffect</button>{" "}
+            <button onClick={() => setLayout(null)}>clear</button>
+            <Example layout={layout} />
+          </div>
+        );
+      }
+
+      ReactDOM.render(<ExampleParent />, document.getElementById("app"));
+\end{lstlisting}
+Dependiendo donde lansas el useEffect() o useLayoutEffect() direccion, podras ver un flicker en la tabla siendo resized desde su valor random(600px) al valor harcoded 250px
+\\
+Nota que en ambos casos estas disponible para obtener la geometria de la tabla si necesitas esto solamente para informacion y no estas rerenderisando usa mejor el asynchronous useEffect(). useLayoutEffect debe ser reservado para evitar el flicker en caso donde necesitas rerenderisar basado en algo que midas, por ejemplo posicionando un componente tooltip fancy basado en el tamanio de los elementos 
+\section{Un Hook custom}
+Vamos atras a excel y ve como ir a implementar el replay. En el caso de los class components. fue necesario crear un logSetState(). Con funcion components puedesa remplazar todas las llamadas al useState() hook con useLoggerdState(). Esto es un poco mas conveniente desde hay solo pocas llamadas(para cada pequenio estado independiente) y ellos estan todos arriba de la funcion
+\begin{lstlisting}[language=html]
+function Excel({headers, initialData}) {
+  // before
+  const [data, setData] = useState(initialData);
+  const [edit, setEdit] = useState(null);
+  // ...etc
+  }
+  // after
+  function Excel ({headers, initialData}) {
+    const [data, setData] = useLoggerdState(initialData, true)
+    const [edit, setEdit] = useLoggerdState(null);
+  }
+\end{lstlisting}
+No hay built-in useLoggerdState() hook, pero esta bien. puedes crear tu propio custom hook. Como el build-in hook es solo una funcion que empiesa con use*() Aqui un ejemplo
+\begin{lstlisting}[language=html]
+function useLoggedState(initialValue, isData)
+   //...
+\end{lstlisting}
+La firma del hook puede ser lo que quieras. En este caso, hay argumento adicional isData. Este proposito es ayudar a diferenciar el data state versus non-data state.\\
+En la clase ejemplo componente del capiutlo 3 todos los estados es un objeto simple, pero hay severas piesas del estado estan presente. en el replay feature, el principal objetivo es mostrar los cambios datos y despues muestra que todos las informaciones de apoyo(ordenando, descendiente, etc)es secundario. Desde el replay es actualizado cada segundo, esto no seria divertido de ver el dato apoyo cambios individuales; el replay sera muy lento. Entonces deja tener un log principal(dataLog array) y un auxiliar (auxLog array). En adicion, es util incluir una bandera indicando donde el estado cambia por que el usuario interactua o (automaticamente) durante el replay
+\begin{lstlisting}[language=html]
+let dataLog= [];
+let auxLog= [];
+let isReplaying= false;
+\end{lstlisting}
+El objetivo hook custom no es interferir con la actualizacion estado regular, entonces esto delega esta responsabilidad al useState original. El objetivo es loguear el estado juntos con una referencia a la funcion que conocermos como actualizar este estado durante replay.\\
+La funcion parece algo como esto
+\begin{lstlisting}[language=html]
+function useLoggedState(initialValue, isData) {
+  const [state, setState] = useState(initialValue);
+  }
+  // fun here
+  return [state, setState];
+\end{lstlisting}
+El codigo arriba esta usando el useState default. pero ahora tienes la referencia a un piesa de state y el significado para actualizar esto. Necesitas logear esto. deja beneficios del hook useEffect() aqui.
+\begin{lstlisting}[language=html]
+function useLoggedState(initialValue, isData) {
+  const [state, setState] = useState(initialValue);
+
+  useEffect(() => {
+    // todo
+  }, [state]);
+  return [state, setState];
+  }
+\end{lstlisting}
+Este metodo asegura que el login pasa solo cuando el valor del stado cambia. La funcion useLoggedState() puede ser llamado un numero de veces durante varias rerenders, pero puedes ignorar estas llamadas hasta ellos envuelve un cambio en una piesa del estado interesante\\
+En el callback de useEffect()
+\begin{itemize}
+  \item No hagas nada si los usuarios estan usando
+  \item Logea cada cambio al data state al dataLog
+  \item Logea cada cambio a apoyar datos para auxLog, indexado por el cambio asociado
+\end{itemize}
+\begin{lstlisting}[language=html]
+useEffect(() => {
+  if (isReplaying){
+    return;
+  }
+  if (isData){
+    dataLog.push([clone(state), setState]);
+  } else {
+    const idx = dataLog.length - 1;
+    if (!auxLog[idx]) {
+      auxLog[idx] = [];
+    }
+    auxLog[idx].push([state, setState]);
+  }
+}, [state]);
+\end{lstlisting}
+Por que existen los custom hook? Ellos ayudan a isolar y Los cusom usan LoggedState() sobre puede dejar caer dentro ningun component que pueden beneficiar desde loggin su estado. Adicionalmente,, custom hooks puede llamar otros hooks, cual regular(non-hook y non-component)function no pueden \\
+\section{Envolviendo el Replay}
+Ahora que tu tienes un custom hook que logea el cambio a varios bits de estado, es tiempo de prender el feature replay\\
+La funcion replay() no es un aspecto existente de la discusion React, pero esto configura un intervalo ID. Tu necesitas que el ID limpiar el intervalo en el evento que excel es removido desde el DOM mientras se reejecuta. En el replay, los cambios del data son rejectuados cada segundo, mientras el auziliar son juntos
+\begin{lstlisting}[language=html]
+function replay(){
+  isReplaying = true;
+  let idx = 0;
+  replayID = setInterval(() => {
+    const [data, fn] = dataLog[idx];
+    fn(data);
+    auxLog[idx] && auxLog[idx].forEach((log) => {
+      const [data, fn] = log;
+      fn(data);
+    });
+    idx++;
+    if(idx > dataLog.length - 1){
+      isReplaying = false;
+      clearInterval(replayID);
+      return;
+    }
+  }, 1000);
+}
+\end{lstlisting}
+El bit final de plumbing es configurar un hook effect. Despues Excel renderisa, el hook es responsable para configurar listener que monitorisa el particular. combinacion de llaves para empezar el replay show. Esto es tambien el lugar para limpiar despues el componente es destruido
+\begin{lstlisting}[language=html]
+useEffect(() => {
+  function keydownHandler(e){
+    if (e.altKey && e.shifKey && e.keyCode === 82){
+      // Alt shift r
+      replay();
+    }
+  }
+  document.addEventListener('keydown', keydownHandler);
+  return () => {
+    document.removeEventListener('keydown', keydownHandler);
+    clearInterval(replayID)
+    dataLog = [];
+    auxLog = [];
+  }
+}, []);
+\end{lstlisting}
+PAra ver el codigo puedes verificar 04.08.fn.table-replay.html
+\section{useReducer}
+Envuelve el capitulo con uno mas built-in hook llamado useReducer(). Usando un reducer es una alternativa para useState(). En lugar de varias partes del componente llamado cambios stado, todos los cambios pueden ser manejados en una ubicacion simple\\
+Un reducer es solo una funcion javascript que toma dos inputs el viejo estado y una accion y retorna el nuevo estado. Piensa en la accion como algunacosa que tiene pasado en la app, talvez un click, data fetch, o timeout. alguna cosa paso y es requerido un cambio. todas el de variables(new state, old state, action)puede ser de ningun tipo, atravez mas comunmente ellos son objetos
+\section{Reducer Functions}
+Una funcion reducida en su forma simple parece esto
+\begin{lstlisting}[language=html]
+function myReducer(oldState, action){
+  const newState = {};
+  // do something with 'oldState' and 'action'
+  return newState;
+  }
+\end{lstlisting}
+Imagina que el reducer function es responsible para hacer sentido de la realidad cuando algo paso en el mundo. El mundo es complejo despues una  funcion evento aparece que deberia makeSense() del mundo reconcilia la complejidad con el evento y reduce todo la complejidad a un buen estado u orden
+
+
+
+
+
+
+
+a

@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React Practice child component</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../reactbook/react/react.js"></script>
+    <script src="../reactbook/react/react-dom.js"></script>
+    <script src="../reactbook/react/babel.js"></script>
+    <script type="text/babel">
+      class MyParentComponent extends React.PureComponent {
+        static getName() {}
+        componentDidUpdate() {
+          console.log(this.constructor.getName() + "::componentDidUpdate");
+        }
+        componentDidMount() {
+          console.log(this.constructor.getName() + "::componentDidMount");
+        }
+        componentWillUnmount() {
+          console.log(this.constructor.getName() + "::componentWillUnmount");
+        }
+      }
+      class Counter extends MyParentComponent {
+        static getName() {
+          return "Counter";
+        }
+        render() {
+          console.log(this.constructor.getName() + " :: render");
+          return <h3>{this.props.count}</h3>;
+        }
+      }
+      Counter.defaultProps = {
+        count: 0,
+      };
+
+      class TextBoxCounter extends MyParentComponent {
+        static getName() {
+          return "TextBoxCounter";
+        }
+        constructor() {
+          super();
+          this.state = {};
+          this.textCapture = this.textCapture.bind(this);
+        }
+        textCapture(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+        render() {
+          console.log(this.constructor.getName() + " :: render");
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              {" "}
+              <textarea onChange={this.textCapture} value={text} />
+              {text.length > 0 ? <Counter count={text.length} /> : null}
+            </div>
+          );
+        }
+      }
+      TextBoxCounter.defaultProps = {
+        text: "Default",
+      };
+      const MyRenderComponent = ReactDOM.render(
+        <TextBoxCounter />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>

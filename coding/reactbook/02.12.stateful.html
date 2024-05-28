@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <title>React Application stateless</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      class TextAreaCounter extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+        }
+        onTextChange(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+        singEvent(event) {
+          this.setState({
+            song: event.target.value,
+          });
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          const song = "song" in this.state ? this.state.song : this.props.song;
+          return (
+            <div>
+              <textarea
+                value={text}
+                onChange={(event) => this.onTextChange(event)}
+              />
+              <textarea
+                value={song}
+                onChange={(event) => this.singEvent(event)}
+              />
+              <h3>{text.length}</h3>
+              <h3>{song}</h3>
+            </div>
+          );
+        }
+      }
+      TextAreaCounter.defulatProps = {
+        text: "Count me as I type",
+      };
+
+      ReactDOM.render(
+        <TextAreaCounter text="Prueba" song="Cantando" />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>

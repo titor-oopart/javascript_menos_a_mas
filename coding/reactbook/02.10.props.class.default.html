@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>React Applicaction</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      class MyComponent extends React.Component {
+        render() {
+          return (
+            <span>
+              I am
+              <em>
+                {" "}
+                {this.props.name} {this.props.lastname}
+              </em>{" "}
+              a {this.props.job}
+            </span>
+          );
+        }
+      }
+      MyComponent.defaultProps = {
+        job: "Engineer",
+      };
+      ReactDOM.render(
+        <MyComponent name="Titor" lastname="Oopart" />,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>

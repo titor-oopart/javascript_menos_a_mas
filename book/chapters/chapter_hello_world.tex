@@ -1,0 +1,48 @@
+\chapter{Hola mundo}
+\section{Configuracion}
+Creamos una carpeta para el la practica de este libro y otra para react dentro del primero
+\begin{lstlisting}[language=bash]
+$ mkdir reactbook
+$ mdir reactbook/react
+\end{lstlisting}
+A continuacion necesitamos agregar dos archivos uno para React el otro para el ReactDom
+\begin{lstlisting}[language=bash]
+$ curl -L https://unpkg.com/react@17/umd/react.development.js > ~/reactbook/
+react/react.js
+$ curl -L https://unpkg.com/react-dom@17/umd/react-dom.development.js > ~/react-
+book/react/react-dom.js
+\end{lstlisting}
+Borra el @17 si ya contabas con una version de nodejs
+
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <! -- my app renders here -->
+      <h1>Hello World!</h1>
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script>
+      ReactDom.render(
+        React.createElement("h1", null, "HelloWorld!"),
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+Aqui podemos ver diferentes cosas
+   
+\begin{enumerate}
+  \item El documento empieza siempre con <!Doctype html>
+  \item El elemento de bloque padre seria <html></html> 
+  \item Los otros dos elementos padres serian <head></head> y <body></body>
+\end{enumerate}
+
+a

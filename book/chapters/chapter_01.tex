@@ -1,0 +1,208 @@
+\chapter{Que es JavaScript}
+Es importante entender como JS esta organizado y mantenido, es una buena manera de aprender JS \\
+JavaScript esta organizado en tres pilares principales: scope/closures, prototypes/objects y types/coercion JS es un lenguaje sofisticadcon muchos features y capabilities. Pero todo JS es encontrado en estos tres pilares fundamentales.
+\chapter{Que con el nombre de JavaScript}
+El nombre JavaScript es probablemente es el error y la falta de entendimiento del lenguaje de programacion\\ Esta relacionado con Java? es solo es script de Java? es solo para escribir scripts o escribir programas?\\
+Este lenguaje fue originalmente diseniado para atraer a la audiencia programadores Java, y porque la palabra script fue popular el tiempo para referirse a programas ligeros. Este scripts de poco peso sera el primero para ponerlos dentro de paginas en la web\\
+La manera como JS es implementado para los navegadores web es en toda practica lo unico que realmente importa.\\
+Varias ambientes JS  como motor browser JS, Node.js, etc agregan APIs dentro el alcance global de su JS programa que da capacidades especificas-ambiente, como hacer disponible salte una alerta-syle box en el browser del usuario.\\
+Es un hecho una amplia gama de JS APIs, como fetch(..), getCurrentLocation(..) y getUserMedia(..) son todas las APIs web que se ven como JS, En Node.js podemos acceder a cientos de metodos API desde varios modulos built-in  como fs.write(..)\\
+Otro ejemplo comun es console.log(..) y todos los otros metodos cosole.* Esto no esta especificado en JS porque su utilidad esta definida por muchos \\
+Entonces alert(..) y console.log(..) no estan definidos por JS pero parecen como JS. Son funciones y objects methods y obedecen la sintaxis de JS. El comportameinto detras de ellos esta controlado por el ambiente corriendo el motor JS\\
+La consola de desarrollador no esta tratando pretender ser un compilador motor JS manejado un archivo .js esta tratando de hacerlo facil no es rasonable esperar una herramienta para manejar las dos coas de manera igual\\
+No creas que el ambiente que ves en el developer console representa exactamente a la semantica JS; para esto, lee las especificaciones. En lugar pensar que la consola es un ambiente JS-amigable 
+\section{Muchas caras}
+El termino paradigma en programacion hace referencia amplia (la mayoria universal) set de pensamiento y asercarse a la estructuracion del codigo Dentro de un paradigma, existen innumerables variaciones. de estilo y forma que distinguen a los programas, incluidos los de bibliotecas y marcos menos diferentes que dejan su singularidad firma en cualquier código dado.\\
+Pero no importa como puede ser un programa individual, la gran imagen divide entre paradigmas son mas evidentes lo primero de cualquier programa\\
+Tipicamente categorias de code paradigm-level incluye procedural, object-oriented(OO/classes), y functional(FP):
+
+\begin{itemize}
+  \item Procedural style organiza el codigo en un top-down, regresion linear atravez de pre determinado set de operaciones usualmente collectado junto en unidades relacionadas llamadas procedurales
+  \item OO syle, organiza el codigo collectando logica y data juntas dentro de nudades llamadas classes
+  \item FP sytle, organiza codigo dentro funciones (puros calculos como opuesto a procedimientos) y la adaptacion de estas funciones como valores
+\end{itemize}
+Paradigmas no son correctas ni incorrectas. Estan orientados a guiar y moldear como programadores manejaran los problemas y soluciones
+JavaScript es un lenguaje multi-paradigma. Puedes escribir procedural, class-oriented o FP syle code, y puedes hacerlo linea por linea basado en tu decicion, en lugar de ser forsado dentro una todo o nada\\
+
+\begin{lstlisting}[language=python] 
+<!doctype html>
+<html>
+  <head>
+    <title>React hola mundod</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../reactbook/react/react.js"></script>
+    <script src="../reactbook/react/react-dom.js"></script>
+    <script>
+      ReactDOM.render(
+        React.createElement("h1", null, "Hola Mundo!"),
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+Podemos cambiar h1 por otro tipo de etiqueta y asi ir conociendolas
+Notemos que el etiqueta con el id app sera actualizada con el componente h1 que se crea con el ReactDOM\\
+Hay un concepto de componentes. Contruyes tu UI usando componentes y los combinas en la manera que veas. En tus aplicaciones puedes crear tus custom components, React provee envoltorios al rededor de HTML DOM elemtns. Tu puedes usar estos con la funcion Recat.CreateElement En este pribmer ejemplo puedes ver el uso de h1 que corresponde a <h1> en HTML\\
+Finalmente veras el buen document.getElementById('app') DOM access Usaras esto para decirle a React donde sera localisada la aplicacion en la pagina. Esto es el puente crusando de la manipulacion del DOM a React.\\
+Una ves crusas el puente del DOM a React, no te preocuparas sobre la manipulacion del DOM por que React hace la tralacion del componente al plataforma(DOM, canvas, native app) Es un hecho no que preocuparte sobre el DOM es una de las cosas geniales de React. Te preocuparas mas sobre la composicion de componentes y sus datos deja a React tomar y actualizar el DOM de manera mas eficiente. 
+\section{React.createElement()}
+Como concoes puedes usar un numero de elemtnos HTML como React componentes via React.createElement() veamos mas de cerca esta API\\
+Analizando el parametro para createElement el primero es el tipo de elemento a ser creado. El segundo donde escribimos null es un objeto que especifica una propiedad (DOM attribute) que tienes que pasarle a tu componente por ejemplo
+
+\begin{lstlisting}[language=html]
+  React.createElement(
+  'h1',
+  {
+    id: 'my-heading'
+  },
+  'Hello world!'
+  )
+\end{lstlisting}
+El HTML generado por este ejemplo en la etiqueta h1 tendra un tributo id='my-heading'\\
+El tercer parametro 'Hello world' define el hijo del componente. Este ejemplo simple es un hijo texto donde pueden ir otros componentes como en este ejemplo y puedes tener tantos hijos como quieras
+
+\begin{lstlisting}[language=html]
+  React.createElement(
+  'h1',
+  {
+    id: 'my-heading'
+  },
+  React.createElement('span, null, 'Hello'),
+  ' world!',
+  'This is good day!'
+  )
+\end{lstlisting}
+
+\begin{lstlisting}[language=html]
+   <!doctype html>
+<html>
+  <head>
+    <title>React hola mundod</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../reactbook/react/react.js"></script>
+    <script src="../reactbook/react/react-dom.js"></script>
+    <script>
+      ReactDOM.render(
+        React.createElement(
+          "h3",
+          null,
+          React.createElement("span", null, "Hola"),
+          " Mundo",
+          " Es un gran dia!",
+        ),
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+\section{JSX}
+Cuando empezamos a anidar componentes, rapidamente terminas con muchas funciones llamadas y parentesis para trackerarlos. Para hacer las cosas mas faciles puedes usar el sintaxis JSX JSX es un poco controversial, las personas a menudo lo encuentras repulsivo diciendo(ugh, XML en mi JavaScript) pero despues es indispensable
+Para esto necesitamos descargar babel en nuestro folder react
+\begin{lstlisting}[language=bash]
+   \$ curl -L https://unpkg.com/babel-standalone/babel.min.js > ~/reactbook/react/babel.js
+\end{lstlisting}
+Aqui tenemos un ejemplo
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      ReactDOM.render(
+        <h1 id="my-heading">
+          <span>
+            Hello<em> Wonderful </em>
+          </span>
+          wold!
+        </h1>,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>!doctype html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      ReactDOM.render(
+        <h1 id="my-heading">
+          <span>
+            Hello<em> Wonderful </em>
+          </span>
+          wold!
+        </h1>,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+Ahora otro ejemplo\\
+01.04.hellojsx.html
+\begin{lstlisting}[language=html]
+<!doctype html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel">
+      ReactDOM.render(
+        <h1 id="my-heading">
+          <span>
+            Hello<em> JSX </em>
+          </span>
+          wold!
+        </h1> ,
+        document.getElementById("app"),
+      );
+    </script>
+  </body>
+</html>
+\end{lstlisting}
+\section{On Transpilation}
+Genial que ya entendiste JSX y Babel para trabajar\\
+JSX es una tecnologia separada de React y es completamente opcional. Como puedes ver\\
+El proceso de transpilation es un proceso de tomar el codigo y reescribirlo en para convertirlo en el mismo resultado pero usando sintaxis que es entendido por los antiguos buscadores. Es diferentes que usar polyfill. Un ejemplo de un polyfill es agregar un metodo al Array.prototype como map(), que fue introducido en ECMAScript5 y haciendolo fucnionar en un browser que soporta solo ECMAScript3. Un polyfill es una solucion en puro JavaScript es una buena solucion cuando agregamos nuevos metodos a objetos existentes o implementamos nuevos objetos(como JSON). Pero no es suficiente cuandod cuando nuevas sintaxis es introducida dentro del lenguaje. Cualquier nueva sintaxis en los ojos del browser que no soporte es invalida y lanzar erroers. No hay manera de polyfill. Nueva sintaxis por esa rason requiere una compilcacion paso (transpilation) sera transformado antes de ser servido en el navegador\\
+Transpiling JavaScript esta siendo mas y mas comun como programadores que quieren usar el ultimo JavaScript(ECMAScript) sin esperar por navegadores lo implementen
+\section{Custom Components}
+En este punto ya sabes como
+\begin{itemize}
+  \item Configurar una librery React para experimentacion y aprendisaje solo usar tags <script>
+  \item Renderisar un componente React en un DOM  ReactDOM.render(queReact, dondeDOM)
+  \item Usar componentes built-in cual estan envueltos sobre elemntos regulares DOM React.createElement(elemento, atributo, contenido, hijo)
+\end{itemize}
+Ahora en el siguient capiutlo aprendemos sobre Componentes custom
