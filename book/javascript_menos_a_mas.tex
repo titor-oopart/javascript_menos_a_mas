@@ -7,7 +7,6 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amsfonts}
-
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
@@ -27,7 +26,37 @@
 	urlcolor=cyan,
 	pdftitle={Overleaft Example},
 }
+\lstset{inputpath=../}
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
 
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -92,7 +121,7 @@ url=true
 	\listoftables
 	\lstlistoflistings
 	\include{chapters/chapter_01}
-%	\include{chapters/chapter_02}
+	\include{chapters/chapter_02}
 %	\include{chapters/chapter_03}
 %	\include{chapters/chapter_04}
 %	\include{chapters/chapter_05}

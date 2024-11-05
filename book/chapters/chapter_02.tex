@@ -1,1 +1,101 @@
-\chapter{Structure and Data Handling}
+\chapter{Estructura y Manejo de datos}
+Saber la estructura y como manejar datos nos permitira controlar el flujo de la ejecucuion basado en condiciones o ejecutar un codigo de manera repetitiva. Manejo de datos envuelve operaciones sobre los datos como crear, recivir manipular y almacenar atravez de tu programa.
+\\
+Controlar estructuras incluye
+\begin{itemize}
+  \item Condicionales (if , else, switch)
+  \item Loops (for, while, do-while)
+\end{itemize}
+Manejo de datos
+\begin{itemize}
+  \item Manipular strings, arrays y objetos
+  \item Verificar tipos de datos y convertirlos entre ellos
+\end{itemize}
+
+\section{Condicionales}
+Para el manerjo de concdicionales tenemos las siguientes opciones
+\\
+La manera mas sencilla y facil
+
+\begin{lstlisting}[language=JavaScript,caption={Ejemplo if else basico}]
+let x = 1;
+let y = 2;
+if(x < y){
+    console.log("x es menor que y");
+} else {
+    console.log("y es menor que x");
+}
+\end{lstlisting}
+Ahora vemos un if en una sola linea
+
+\begin{lstlisting}[language=JavaScript,caption={Ejemplo if una linea}]
+let x = 1;
+let y = 2;
+if (x < y) console.log("x es menor que y");
+\end{lstlisting}
+
+\begin{lstlisting}[language=JavaScript,caption={Ejemplo if else una linea}]
+let x = 1;
+let y = 2;
+if (x < y) console.log("x es menor que y"); else console.log("y es menor que x");
+\end{lstlisting}
+\subsection{Operador Ternario}
+El operador ternario es una forma concisa de escribir una expresión condicional en JavaScript (y en otros lenguajes de programación). Se utiliza para evaluar una condición y devolver uno de dos valores basados en el resultado de esa evaluación. \cite{OpenAI2023}
+\\
+
+condición ? valorSiVerdadero : valorSiFalso;
+
+\begin{lstlisting}[language=JavaScript,caption={Ejemplo if else una linea}]
+let x = 1;
+let y = 2;
+let respuesta = (x < y) ? "x es menor que y": "y es menor que x";
+\end{lstlisting}
+Ejemplo con varios tenarios
+
+\begin{lstlisting}[language=JavaScript,caption={Ejemplo if else elif ternarios}]
+let edad = 32;
+let respuesta = (0 < edad < 2) ? "Bebe":
+                (edad < 12) ? "Nino":
+                (edad < 18) ? "Adolecente":
+                (edad < 70) ? "Adulto":
+                (edad < 110) ? "Adulto mayor":
+                "La edad no Existe";
+\end{lstlisting}
+Con esta explicacion ahora haremos un ejemplo con un archivo HTML
+\lstinputlisting[language=javascript,linerange={1-8, 11-12},caption=ejemplo.html]{/chapter_02/ejemplo.html}
+\lstinputlisting[language=javascript,caption=ejemplo\_01.js]{/chapter_02/ejemplo_01.js}
+Si abres el archivo ejemplo\_01.html con un navegador podras ver apretando F12 un mensaje en la consola
+\section{Iteraciones o Loops}
+Ejemplo de como hacer un loop que es basicamente un codigo que ejecuta una accion multiples veces como el usuario requiera.
+\lstinputlisting[language=JavaScript,caption=ejemplo\_02.js]{/chapter_02/ejemplo_02.js}
+Ejemplo en una sola linea
+
+\begin{lstlisting}[language=JavaScript,caption={Ejemplo for una linea}]
+for (let i = 1; i <= 10; i ++) console.log(i);
+\end{lstlisting}
+\section{Verificacion de tipos de datos}
+\begin{lstlisting}[language=JavaScript,caption={Ejemplo tipos de datos}]
+let name = Jon;
+let edad = 32;
+let esEstudiante = false;
+console.log(typeof name); // "string"
+console.log(typeof edad); // "number"
+console.log(typeof name); // "boolean"
+\end{lstlisting}
+
+\lstinputlisting[language=javascript,caption=ejemplo\_03.html,linerange={1-11}]{/chapter_02/ejemplo_03.js}
+
+{\textbf {\huge Practica}}
+\\
+Dado una entrada escribe si es un numero, si es un numero debuelve un mensaje en la consola si este es positivo o negativo. agrega el script a ejemplo.html
+
+\lstinputlisting[language=javascript,caption=practica\_01.js,linerange={1-100}]{/chapter_02/practica_01.js}
+
+%\lstinputlisting[language=javascript,caption=ejemplo.js,linerange={1-11}]{/chapter_02/ejemplo_01.js}
+%
+%\begin{lstlisting}[language=JavaScript,caption={Ejemplo if else una linea}]
+%let x = 1;
+%let y = 2;
+%if (x < y) console.log("x es menor que y"); else console.log("y es menor que x");
+%\end{lstlisting}
+%
